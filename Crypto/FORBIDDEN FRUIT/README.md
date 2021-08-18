@@ -80,7 +80,7 @@ def encrypt(plaintext):
 
 Given cryptosystem implements AES (<u>*Advanced Encryption Standar*</u>) GCM (<u>*Galois Counter Mode*</u>) Mode. Here's the detail of [AES_GCM](https://en.wikipedia.org/wiki/Galois/Counter_Mode). The basic idea of GCM mode is to compute the GHASH attaching to the ciphertext to validate the authentication of the information. 
 
-Notice that in this challenge, IV is reusing, which may be equal to a constant  `IV = ?` It's a dangerous behavior, which is possible to be exploited by the attacker. It is easy to compute the $H = E_k(IV|0^{32})$  and $E_k(IV||0^{31}1)$ , which are critical in computing the GHASH and MAC (<u>*Mesaage Autentication Code*</u>).
+Notice that in this challenge, IV is reusing, which may be equal to a constant  `IV = ?` It's a dangerous behavior, which is possible to be exploited by the attacker. It is easy to compute the <a href="https://www.codecogs.com/eqnedit.php?latex=\inline&space;H&space;=&space;E_k(IV|0^{32})" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\inline&space;H&space;=&space;E_k(IV|0^{32})" title="H = E_k(IV|0^{32})" /></a>  and <a href="https://www.codecogs.com/eqnedit.php?latex=\inline&space;E_k(IV||0^{31}1)" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\inline&space;E_k(IV||0^{31}1)" title="E_k(IV||0^{31}1)" /></a> , which are critical in computing the GHASH and MAC (<u>*Mesaage Autentication Code*</u>).
 
 ![{\text{GHASH}}(H,A,C)=X_{m+n+1}](https://wikimedia.org/api/rest_v1/media/math/render/svg/9e816432ae782e4f477b4d3550cdaed7d13ea987)
 
@@ -100,7 +100,7 @@ Because the IV is reusing, the $H$ and <a href="https://www.codecogs.com/eqnedit
 
 <a href="https://www.codecogs.com/eqnedit.php?latex=\dpi{120}&space;T_1&space;\oplus&space;T_2&space;=&space;(C_1&space;\oplus&space;C_2)H^2" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\dpi{120}&space;T_1&space;\oplus&space;T_2&space;=&space;(C_1&space;\oplus&space;C_2)H^2" title="T_1 \oplus T_2 = (C_1 \oplus C_2)H^2" /></a></br>
 
-And the subsequent works are going to be simple. But I go through a dark age since I am searching a way to implement polynomial factorization over $GF(2^{128})$ I used the package called `galois` in Python but I didn't figure it out. I feel so weird to do some simple arithmetic operation in the finite field. (*Maybe I never know its correct way to use*) Anyway, I tried some other mathmatics tools and found SageMath finally. (I wonder whether I have once heard about sage in the lecture):
+And the subsequent works are going to be simple. But I go through a dark age since I am searching a way to implement polynomial factorization over <a href="https://www.codecogs.com/eqnedit.php?latex=\inline&space;GF(2^{128})" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\inline&space;GF(2^{128})" title="GF(2^{128})" /></a> I used the package called `galois` in Python but I didn't figure it out. I feel so weird to do some simple arithmetic operation in the finite field. (*Maybe I never know its correct way to use*) Anyway, I tried some other mathmatics tools and found SageMath finally. (I wonder whether I have once heard about sage in the lecture):
 
 I spent a nice time on reading the documents to learn how to write the code in sage. It's quite like Python but has its own special syntax. Like `F.<x> = GF(2)[]` I stuck in this syntax in python scripts, beacuse it will be error when you execute your scripts with `F.<x> = GF(2)[]` (Obviously) :( 
 
