@@ -86,18 +86,18 @@ Notice that in this challenge, IV is reusing, which may be equal to a constant  
 
 We can compute the tag using these formula:
 
-​																					$Tag = AAD * H^3 + C_1*H^2 + L*H + E_k(IV||0^{31}1)$ 
+​																					$$Tag = AAD * H^3 + C_1*H^2 + L*H + E_k(IV||0^{31}1)$$ 
 
 $L = len(AAD) || len(ciphertext)$ Notice that the len of text is the **bit lengths**
 In this challenge we need to forge the tag of the ciphertext, which is encrypted by the plaintext of `give me the flag`. It's just 16 bytes here, Perfect ! We can get some oracles from the server and then compute the things we don't know by solving the linear equation.
 
-​																	$T_1 = AAD*H^3 + C_1*H^2 + L*H + E_k(IV||0^{31}1)$
+​																	$$T_1 = AAD*H^3 + C_1*H^2 + L*H + E_k(IV||0^{31}1)$$
 
-​																	$T_2 = AAD*H^3 + C_2*H^2 + L*H + E_k(IV||0^{31}1)$
+​																	$$T_2 = AAD*H^3 + C_2*H^2 + L*H + E_k(IV||0^{31}1)$$
 
 Because the IV is reusing, the $H$ and $E_k(IV||0^{31}1)$  here are equal in these two equation. And all arithmetic operations are based on $GF(2^{128})$, we can add these two equations to get:
 
-​																									$T_1 \oplus T_2 = (C_1 \oplus C_2)H^2$
+​																									$$T_1 \oplus T_2 = (C_1 \oplus C_2)H^2$$
 
 And the subsequent works are going to be simple. But I go through a dark age since I am searching a way to implement polynomial factorization over $GF(2^{128})$ I used the package called `galois` in Python but I didn't figure it out. I feel so weird to do some simple arithmetic operation in the finite field. (*Maybe I never know its correct way to use*) Anyway, I tried some other mathmatics tools and found SageMath finally. (I wonder whether I have once heard about sage in the lecture):
 
