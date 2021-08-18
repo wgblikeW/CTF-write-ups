@@ -86,7 +86,7 @@ Notice that in this challenge, IV is reusing, which may be equal to a constant  
 
 We can compute the tag using these formula:
 
-​                  ![formula](https://render.githubusercontent.com/render/math?math=Tag = AAD * H^3 + C_1*H^2 + L*H + E_k(IV||0^{31}1))																					
+​                  ![formula](https://render.githubusercontent.com/render/math?math=Tag=AAD * H^3 + C_1*H^2 + L*H + E_k(IV||0^{31}1))																					
 $L = len(AAD) || len(ciphertext)$ Notice that the len of text is the **bit lengths**
 In this challenge we need to forge the tag of the ciphertext, which is encrypted by the plaintext of `give me the flag`. It's just 16 bytes here, Perfect ! We can get some oracles from the server and then compute the things we don't know by solving the linear equation.
 
