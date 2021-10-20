@@ -1,1 +1,1 @@
-Some CTF write-ups for beginners and were written by beginner.
+Some CTF write-ups for beginners and was written by beginner.
