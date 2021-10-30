@@ -1,9 +1,12 @@
 package cipherfactory
 
 import (
-	"crypto/elliptic"
+	"encoding/hex"
+	"log"
 	"math/big"
 	"os"
+
+	"github.com/ethereum/go-ethereum/crypto/secp256k1"
 )
 
 type Point struct {
@@ -12,7 +15,7 @@ type Point struct {
 }
 
 type EllipticCurveCSOption struct {
-	EllipticCurve elliptic.Curve
+	EllipticCurve *secp256k1.BitCurve
 	PublicKey     []*big.Int
 	PrivateKey    *big.Int
 }
@@ -29,22 +32,19 @@ type Cipherimple2Operation interface {
 }
 
 func (ellipticCurveOption *EllipticCurveCSOption) CompleteEllipticCurveOption() {
-	ellipticCurve := elliptic.P256()
 
-	privateKey := convertStringToBigInt(os.Getenv("PRIVATEKEY"), 16)
-
-	publicKey_X := os.Getenv("GX")
-	publicKey_Y := os.Getenv("GY")
-	var publicKey []*big.Int
-	publicKey = append(publicKey, convertStringToBigInt(publicKey_X, 10), convertStringToBigInt(publicKey_Y, 10))
-
+	// setting ellipticCurve
+	ellipticCurve := secp256k1.S256()
 	ellipticCurveOption.EllipticCurve = ellipticCurve
-	ellipticCurveOption.PrivateKey = privateKey
-	ellipticCurveOption.PublicKey = publicKey
-}
 
-func convertStringToBigInt(bigIntString string, base int) *big.Int {
-	bigInt := new(big.Int)
-	bigInt.SetString(bigIntString, base)
-	return bigInt
+	// setting privateKey
+	privateKey_Byte, _ := hex.DecodeString(os.Getenv("PRIVATEKEY"))
+	privateKey := new(big.Int).SetBytes(privateKey_Byte)
+	ellipticCurveOption.PrivateKey = privateKey
+
+	// setting publicKey
+	publicKey_x, publicKey_y := ellipticCurve.ScalarBaseMult(privateKey.Bytes())
+	ellipticCurveOption.PublicKey = make([]*big.Int, 2)
+	ellipticCurveOption.PublicKey[0], ellipticCurveOption.PublicKey[1] = publicKey_x, publicKey_y
+	log.Printf("Pubkey_x %s Pubkey_y %s", hex.EncodeToString(publicKey_x.Bytes()), hex.EncodeToString(publicKey_y.Bytes()))
 }
