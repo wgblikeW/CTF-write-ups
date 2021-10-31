@@ -2,7 +2,6 @@ package cipherfactory
 
 import (
 	"encoding/hex"
-	"log"
 	"math/big"
 	"os"
 
@@ -30,5 +29,4 @@ func (ellipticCurveOption *EllipticCurveCSOption) CompleteEllipticCurveOption() 
 	publicKey_x, publicKey_y := ellipticCurve.ScalarBaseMult(privateKey.Bytes())
 	ellipticCurveOption.PublicKey = make([]*big.Int, 2)
 	ellipticCurveOption.PublicKey[0], ellipticCurveOption.PublicKey[1] = publicKey_x, publicKey_y
-	log.Printf("Pubkey_x %s Pubkey_y %s", hex.EncodeToString(publicKey_x.Bytes()), hex.EncodeToString(publicKey_y.Bytes()))
 }
