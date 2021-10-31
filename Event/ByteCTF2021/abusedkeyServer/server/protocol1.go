@@ -17,10 +17,13 @@ import (
 func ImplementProtocol1Phase1() (string, string) {
 	ellipticCurve := ellipticCurveOption.EllipticCurve
 	N := ellipticCurve.N
+	// t_S <- Z_p
 	t_S, err := rand.Int(rand.Reader, new(big.Int).Sub(N, big.NewInt(1)))
 	if err != nil {
 		log.Println("Error in Generating random number")
 	}
+
+	// T_S <- t_S * G
 	T_S_x, T_S_y := ellipticCurve.ScalarBaseMult(t_S.Bytes())
 	T_S_hex := hex.EncodeToString(T_S_x.Bytes()) + hex.EncodeToString(T_S_y.Bytes())
 	return T_S_hex, hex.EncodeToString(t_S.Bytes())
@@ -28,7 +31,7 @@ func ImplementProtocol1Phase1() (string, string) {
 
 func ImplementProtocol1Phase3(T_C_x *big.Int, T_C_y *big.Int, t_S string) ([]byte, error) {
 	t_S_BigInt, ok := new(big.Int).SetString(t_S, 16)
-	log.Printf("t_S %s", t_S_BigInt.String())
+
 	if !ok {
 		err := errors.New("error occured when converting string to BigInt")
 		return nil, err
@@ -43,16 +46,13 @@ func ImplementProtocol1Phase3(T_C_x *big.Int, T_C_y *big.Int, t_S string) ([]byt
 	publicKey_Y := new(big.Int).SetBytes(publicKey_C_Y_B)
 
 	d_S_plus_t_S := new(big.Int).Add(d_S, t_S_BigInt)
-	d_S_plus_t_S = new(big.Int).Mod(d_S_plus_t_S, ellipticCurve.N)
-	log.Printf("d_S_plus_t_S %s", d_S_plus_t_S.String())
 
 	leftpoint_x, leftpoint_y := ellipticCurve.ScalarMult(T_C_x, T_C_y, d_S_plus_t_S.Bytes())
-	log.Printf("leftpoint_x %s leftpoint_y %s", hex.EncodeToString(leftpoint_x.Bytes()), hex.EncodeToString(leftpoint_y.Bytes()))
 
 	rightpoint_x, rightpoint_y := ellipticCurve.ScalarMult(publicKey_X, publicKey_Y, t_S_BigInt.Bytes())
-	log.Printf("rightpoint_x %s rightpoint_y %s", hex.EncodeToString(rightpoint_x.Bytes()), hex.EncodeToString(rightpoint_y.Bytes()))
+
 	K_CS_x, _ := ellipticCurve.Add(leftpoint_x, leftpoint_y, rightpoint_x, rightpoint_y)
-	log.Printf("K_CS_x %s", hex.EncodeToString(K_CS_x.Bytes()))
+
 	return K_CS_x.Bytes(), nil
 }
 

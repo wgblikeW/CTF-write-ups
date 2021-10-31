@@ -9,26 +9,10 @@ import (
 	"github.com/ethereum/go-ethereum/crypto/secp256k1"
 )
 
-type Point struct {
-	X *big.Int
-	Y *big.Int
-}
-
 type EllipticCurveCSOption struct {
 	EllipticCurve *secp256k1.BitCurve
 	PublicKey     []*big.Int
 	PrivateKey    *big.Int
-}
-
-type AesCSSetting struct {
-	Key     []byte
-	AesMode string
-	IV      []byte
-}
-
-type Cipherimple2Operation interface {
-	Encrypt([]byte) ([]byte, error)
-	Decrypt([]byte) ([]byte, error)
 }
 
 func (ellipticCurveOption *EllipticCurveCSOption) CompleteEllipticCurveOption() {
